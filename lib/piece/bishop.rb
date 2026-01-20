@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'piece'
-require_relative 'bishopable'
+require_relative '../move/bishopable'
 
 class Bishop < Piece
   attr_reader :symbol, :color, :row, :column

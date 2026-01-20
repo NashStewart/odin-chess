@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../lib/pawn'
+require_relative '../../lib/piece/pawn'
 
 describe Pawn do
   describe '#valid_move?' do

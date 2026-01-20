@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'piece'
-require_relative 'rookable'
+require_relative '../move/rookable'
 
 class Rook < Piece
   attr_reader :symbol, :color, :row, :column
