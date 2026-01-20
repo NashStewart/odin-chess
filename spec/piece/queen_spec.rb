@@ -24,7 +24,7 @@ describe Queen do
         expect(result).to eq(true)
       end
       
-      it 'returns true for valid negative horizontal move' do
+      it 'returns true for valid positive horizontal move' do
         row = 1
         column = 6
 
