@@ -1,71 +1,62 @@
 # frozen_string_literal: true
 
-require_relative '../../lib/piece/bishop'
+require_relative '../../lib/piece/queen'
 
-describe Bishop do
+describe Queen do
   describe '#can_move?' do
     let(:white) { 'WHITE' }
     let(:black) { 'BLACK' }
     let(:board) { Array.new(8) { Array.new(8, nil) } }
 
     context 'when the board is empty' do
-      subject(:bishop) { described_class.new(1, 2, white) }
+      subject(:queen) { described_class.new(1, 1, white) }
 
       before do
-        board[1][2] = bishop
+        board[1][1] = queen
       end
 
       it 'returns true for valid positive diagonal move' do
-        row = 4
-        column = 5
+        row = 6
+        column = 6
 
-        result = bishop.can_move?(row, column, board)
+        result = queen.can_move?(row, column, board)
         
         expect(result).to eq(true)
       end
       
       it 'returns true for valid negative horizontal move' do
-        row = 0
-        column = 1
+        row = 1
+        column = 6
 
-        result = bishop.can_move?(row, column, board)
+        result = queen.can_move?(row, column, board)
         
         expect(result).to eq(true)
       end
       
-      it 'returns false for horizontal move' do
-        row = 1
-        column = 3
+      it 'returns false if move is up three and right five' do
+        row = 4
+        column = 6
 
-        result = bishop.can_move?(row, column, board)
-        
-        expect(result).to eq(false)
-      end
-      
-      it 'returns false if move is one up and three right' do
-        row = 2
-        column = 5
-
-        result = bishop.can_move?(row, column, board)
+        result = queen.can_move?(row, column, board)
         
         expect(result).to eq(false)
       end
     end
 
     context 'when player has another piece on the board' do
-      subject(:bishop) { described_class.new(1, 1, white) }
-      let(:ally_bishop) { described_class.new(2, 2, white) }
+      subject(:queen) { described_class.new(1, 1, white) }
+      let(:ally_queen) { described_class.new(2, 2, white) }
 
       before do
-        board[1][1] = bishop
-        board[2][2] = ally_bishop
+        board[1][1] = queen
+        board[2][2] = ally_queen
       end
 
       it 'returns false when other piece at given position' do
         row = 2
         column = 2
 
-        result = bishop.can_move?(row, column, board)
+        result = queen.can_move?(row, column, board)
         
         expect(result).to eq(false)
       end
@@ -74,26 +65,26 @@ describe Bishop do
         row = 3
         column = 3
 
-        result = bishop.can_move?(row, column, board)
+        result = queen.can_move?(row, column, board)
         
         expect(result).to eq(false)
       end
     end
     
     context 'when opponent has piece on the board' do
-      subject(:bishop) { described_class.new(1, 1, white) }
-      let(:opponent_bishop) { described_class.new(2, 2, black) }
+      subject(:queen) { described_class.new(1, 1, white) }
+      let(:opponent_queen) { described_class.new(2, 2, black) }
 
       before do
-        board[1][1] = bishop
-        board[2][2] = opponent_bishop
+        board[1][1] = queen
+        board[2][2] = opponent_queen
       end
       
       it 'returns true when opponent piece at given position' do
         row = 2
         column = 2
 
-        result = bishop.can_move?(row, column, board)
+        result = queen.can_move?(row, column, board)
         
         expect(result).to eq(true)
       end
@@ -102,7 +93,7 @@ describe Bishop do
         row = 3
         column = 3
 
-        result = bishop.can_move?(row, column, board)
+        result = queen.can_move?(row, column, board)
         
         expect(result).to eq(false)
       end

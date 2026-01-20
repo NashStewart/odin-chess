@@ -3,7 +3,7 @@
 require_relative '../../lib/piece/knight'
 
 describe Knight do
-  describe '#valid_move?' do
+  describe '#can_move?' do
     let(:white) { 'WHITE' }
     let(:black) { 'BLACK' }
     let(:board) { Array.new(8) { Array.new(8, nil) } }
