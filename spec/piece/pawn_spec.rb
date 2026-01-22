@@ -8,7 +8,7 @@ describe Pawn do
     let(:black) { 'BLACK' }
     let(:board) { Array.new(8) { Array.new(8, nil) } }
 
-    context 'when the board is empty' do
+    context 'when pawn is white' do
       subject(:pawn) { described_class.new(1, 1, white) }
 
       before do
@@ -62,6 +62,68 @@ describe Pawn do
       
       it 'returns false for diagonal move' do
         row = 2
+        column = 2
+
+        result = pawn.can_move?(row, column, board)
+        
+        expect(result).to eq(false)
+      end
+    end
+
+    context 'when pawn is black' do
+      subject(:pawn) { described_class.new(6, 1, black) }
+
+      before do
+        board[6][1] = pawn
+      end
+
+      it 'returns true for one empty space forward' do
+        row = 5
+        column = 1
+
+        result = pawn.can_move?(row, column, board)
+        
+        expect(result).to eq(true)
+      end
+      
+      it 'returns false for horizontal move' do
+        row = 6
+        column = 2
+
+        result = pawn.can_move?(row, column, board)
+        
+        expect(result).to eq(false)
+      end
+      
+      it 'returns true if first move is two spaces forward' do
+        row = 4
+        column = 1
+
+        result = pawn.can_move?(row, column, board)
+        
+        expect(result).to eq(true)
+      end
+
+      it 'returns false for move of three spaces forward' do
+        row = 3
+        column = 1
+
+        result = pawn.can_move?(row, column, board)
+        
+        expect(result).to eq(false)
+      end
+
+      it 'returns false for backwards movement' do
+        row = 7
+        column = 1
+
+        result = pawn.can_move?(row, column, board)
+        
+        expect(result).to eq(false)
+      end
+      
+      it 'returns false for diagonal move' do
+        row = 5
         column = 2
 
         result = pawn.can_move?(row, column, board)

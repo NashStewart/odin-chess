@@ -3,7 +3,7 @@
 class Piece
   attr_reader :symbol, :color, :row, :column
 
-  def initialize(row, column, color = 'WHITE', symbol = '')
+  def initialize(row, column, color = Color::WHITE, symbol = '')
     @row = row
     @column = column
     @color = color

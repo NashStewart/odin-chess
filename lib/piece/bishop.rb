@@ -9,7 +9,7 @@ class Bishop < Piece
   include Bishopable
 
   def initialize(row, column, color)
-    symbol = color == 'WHITE' ? '♝' : '♗'
+    symbol = color == Color::WHITE ? '♝' : '♗'
     super(row, column, color, symbol)
   end
 

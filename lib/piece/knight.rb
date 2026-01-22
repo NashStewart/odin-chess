@@ -5,8 +5,8 @@ require_relative 'piece'
 class Knight < Piece
   attr_reader :symbol, :color, :row, :column
 
-  def initialize(row, column, color = 'WHITE')
-    symbol = color == 'WHITE' ? '♞' : '♙♘'
+  def initialize(row, column, color = Color::WHITE)
+    symbol = color == Color::WHITE ? '♞' : '♘'
     super(row, column, color, symbol)
     @never_moved = true
   end
