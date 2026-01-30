@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../lib/game'
+require_relative '../lib/board'
 require_relative '../lib/piece/pawn'
 require_relative '../lib/piece/rook'
 require_relative '../lib/piece/knight'
@@ -28,44 +29,104 @@ describe Game do
       let(:black_king) { King.new(7, 4, black) }
       subject(:game) { described_class.new() }
 
-      fit 'moves players own piece' do
+      it 'moves piece if move is valid' do
         old_row = 0
         old_column = 1
         new_row = 2
         new_column = 2
 
-        old_position_before = game.board.piece_at(old_row, old_column)
-        
         game.move_piece(white_knight, new_row, new_column)
-        
-        old_position_after = game.board.piece_at(old_row, old_column)
+
+        old_position = game.board.piece_at(old_row, old_column)
         new_position = game.board.piece_at(new_row, new_column)
 
-        expect(old_position_before.color).to eq(white_knight.color)
-        expect(old_position_before.symbol).to eq(white_knight.symbol)
-        expect(old_position_after).to be_nil
-        expect(new_position.color).to eq(white_knight.color)
-        expect(new_position.symbol).to eq(white_knight.symbol)
+        expect(white_knight.row).to eq(new_row)
+        expect(white_knight.column).to eq(new_column)
+        expect(old_position).to be_nil
+        expect(new_position).to eq(white_knight)
+      end
+      
+      it 'does not move piece if move is invalid' do
+        old_row = 0
+        old_column = 1
+        new_row = 1
+        new_column = 2
+
+        game.move_piece(white_knight, new_row, new_column)
+
+        old_position = game.board.piece_at(old_row, old_column)
+        new_position = game.board.piece_at(new_row, new_column)
+
+        expect(white_knight.row).to eq(old_row)
+        expect(white_knight.column).to eq(old_column)
+        expect(old_position).to eq(white_knight)
+        expect(new_position).to eq(white_pawn)
       end
 
-      it 'does not move opponents piece' do
-        old_row = 6
-        old_column = 4
+      it 'does not move opponent piece' do
+        old_row = 7
+        old_column = 6
         new_row = 5
-        new_column = 4
+        new_column = 5
 
-        old_position_before = game.board.piece_at(old_row, old_column)
-        
-        game.move_piece(white_pawn, new_row, new_column)
-        
-        old_position_after = game.board.piece_at(old_row, old_column)
+        game.move_piece(black_knight, new_row, new_column)
+
+        old_position = game.board.piece_at(old_row, old_column)
         new_position = game.board.piece_at(new_row, new_column)
 
-        expect(old_position_before.color).to eq(white_pawn.color)
-        expect(old_position_before.symbol).to eq(white_pawn.symbol)
-        expect(old_position_after).to be_nil
-        expect(new_position.color).to eq(white_pawn.color)
-        expect(new_position.symbol).to eq(white_pawn.symbol)
+        expect(black_knight.row).to eq(old_row)
+        expect(black_knight.column).to eq(old_column)
+        expect(old_position).to eq(black_knight)
+        expect(new_position).to be_nil
+      end
+    end
+  end
+
+  describe '#check?' do
+    context 'when king is in check' do
+      let(:white_king) { King.new(1, 1, white) }
+      let(:black_rook) { Rook.new(1, 5, black) }
+      subject(:board) {
+        Board.new([
+          Array.new(8, nil),
+          [nil, white_king, nil, nil, nil, black_rook, nil, nil],
+          Array.new(8, nil),
+          Array.new(8, nil),
+          Array.new(8, nil),
+          Array.new(8, nil),
+          Array.new(8, nil),
+          Array.new(8, nil),
+          Array.new(8, nil),
+        ])
+      }
+      subject(:game) { described_class.new(board) }
+
+      it 'returns true if opponent piece could move to king' do
+        result = game.check?(white_king)
+
+        expect(result).to eq(true)
+      end
+
+      it 'returns false if king moves out of check' do
+        new_row = 2
+        column = 1
+        white_king.update_position(new_row, column)
+        board.move_piece(white_king, new_row, column)
+
+        result = game.check?(white_king)
+
+        expect(result).to eq(false)
+      end
+
+      it 'returns false if king moves out of check' do
+        new_row = 2
+        column = 1
+        white_king.update_position(new_row, column)
+        board.move_piece(white_king, new_row, column)
+
+        result = game.check?(white_king)
+
+        expect(result).to eq(false)
       end
     end
   end

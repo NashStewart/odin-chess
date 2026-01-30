@@ -90,16 +90,16 @@ describe Rook do
     end
     
     context 'when opponent has piece on the board' do
-      subject(:rook) { described_class.new(0, 0, white) }
-      let(:opponent_rook) { described_class.new(0, 5, black) }
+      subject(:rook) { described_class.new(1, 0, white) }
+      let(:opponent_rook) { described_class.new(1, 5, black) }
 
       before do
-        board[0][0] = rook
-        board[0][5] = opponent_rook
+        board[1][0] = rook
+        board[1][5] = opponent_rook
       end
 
       it 'returns true for valid horizontal move' do
-        row = 0
+        row = 1
         column = 4
 
         result = rook.can_move?(row, column, board)
@@ -108,7 +108,7 @@ describe Rook do
       end
       
       it 'returns true when opponent piece at given position' do
-        row = 0
+        row = 1
         column = 5
 
         result = rook.can_move?(row, column, board)
@@ -117,12 +117,21 @@ describe Rook do
       end
       
       it 'returns false when opponent piece is in the way' do
-        row = 0
+        row = 1
         column = 7
 
         result = rook.can_move?(row, column, board)
         
         expect(result).to eq(false)
+      end
+      
+      it 'returns true for valid opponent move' do
+        row = 0
+        column = 5
+
+        result = opponent_rook.can_move?(row, column, board)
+        
+        expect(result).to eq(true)
       end
     end
   end

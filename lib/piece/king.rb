@@ -1,14 +1,9 @@
 # frozen_string_literal: true
 
 require_relative 'piece'
-require_relative '../move/rookable'
-require_relative '../move/bishopable'
 
 class King < Piece
   attr_reader :symbol, :color, :row, :column
-
-  include Rookable
-  include Bishopable
 
   def initialize(row, column, color)
     symbol = color == Color::WHITE ? '♚' : '♔'
@@ -20,9 +15,31 @@ class King < Piece
     return false unless row.between?(@row - 1, @row + 1)
     return false unless column.between?(@column - 1, @column + 1)
 
-    (
-      can_move_like_a_rook?(@row, @column, row, column, board) ||
-      can_move_like_a_bishop?(@row, @column, row, column, board)
-    )
+    return possible_moves(board).include?([row, column])
+  end
+
+  def possible_moves(board)
+    possible_moves = [
+      [@row + 1, @column - 1],
+      [@row + 1, @column],
+      [@row + 1, @column + 1],
+      [@row, @column - 1],
+      [@row, @column + 1],
+      [@row - 1, @column - 1],
+      [@row - 1, @column],
+      [@row - 1, @column + 1],
+    ]
+
+    possible_moves.each_with_index do |move, index|
+      row = move.first
+      column = move.last
+      piece = board[row][column]
+
+      unless !out_of_bounds?(row, column, board) && (piece.nil? || piece.color != @color)
+        possible_moves.delete_at(index)
+      end
+    end
+
+    return possible_moves
   end
 end

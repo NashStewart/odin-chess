@@ -106,6 +106,15 @@ describe Bishop do
         
         expect(result).to eq(false)
       end
+      
+      it 'returns true when opponent opponent moves' do
+        row = 1
+        column = 3
+
+        result = opponent_bishop.can_move?(row, column, board)
+        
+        expect(result).to eq(true)
+      end
     end
   end
 end

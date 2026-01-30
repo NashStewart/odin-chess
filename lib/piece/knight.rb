@@ -8,29 +8,35 @@ class Knight < Piece
   def initialize(row, column, color = Color::WHITE)
     symbol = color == Color::WHITE ? '♞' : '♘'
     super(row, column, color, symbol)
-    @never_moved = true
   end
 
   def can_move?(row, column, board)
     return false unless super(row, column, board)
-    return false unless column.between?(@column - 2, @column + 2)
-    return false unless row.between?(@row - 2, @row + 2) 
-
-    move = board[row][column]
-
-    if row == @row - 2 || row == @row + 2
-      return false unless column == @column - 1 || column == @column + 1
-      return true if move.nil? || move.color != @color
-    elsif column == @column - 2 || column == @column + 2
-      return false unless row == @row - 1 || row == @row + 1
-      return true if move.nil? || move.color != @color
-    end
-
-    return false
+    
+    return possible_moves(board).include?([row, column])
   end
 
-  def update_position(row, column)
-    super(row, column)
-    @never_moved = false
+  def possible_moves(board)
+    possible_moves = [
+      [row + 2, column + 1],
+      [row + 2, column - 1],
+      [row - 2, column + 1],
+      [row - 2, column - 1],
+      [row + 1, column + 2],
+      [row - 1, column + 2],
+      [row + 1, column - 2],
+      [row - 1, column - 2]
+    ]
+
+    possible_moves.each_with_index do |move, index|
+      if out_of_bounds?(move.first, move.last, board)
+        possible_moves.delete_at(index)
+      else
+        piece = board[move.first][move.last]
+        possible_moves.delete_at(index) unless piece.nil? || piece.color != @color
+      end
+    end
+
+    return possible_moves
   end
 end

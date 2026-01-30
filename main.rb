@@ -1,3 +1,7 @@
 # frozen_string_literal: true
 
-puts('Hello, Chess!')
+require_relative 'lib/game'
+require_relative 'lib/display'
+
+game = Game.new
+game.play

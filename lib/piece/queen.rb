@@ -7,9 +7,6 @@ require_relative '../move/bishopable'
 class Queen < Piece
   attr_reader :symbol, :color, :row, :column
 
-  include Rookable
-  include Bishopable
-
   def initialize(row, column, color)
     symbol = color == Color::WHITE ? '♛' : '♕'
     super(row, column, color, symbol)
@@ -19,8 +16,12 @@ class Queen < Piece
     return false unless super(row, column, board)
 
     (
-      can_move_like_a_rook?(@row, @column, row, column, board) ||
-      can_move_like_a_bishop?(@row, @column, row, column, board)
+      Rookable.can_move_like_a_rook?(@row, @column, row, column, board) ||
+      Bishopable.can_move_like_a_bishop?(@row, @column, row, column, board)
     )
+  end
+  
+  def possible_moves(board)
+    Rookable.possible_moves(self, board) + Bishopable.possible_moves(self, board)
   end
 end

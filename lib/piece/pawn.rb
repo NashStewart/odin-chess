@@ -13,21 +13,26 @@ class Pawn < Piece
 
   def can_move?(row, column, board)
     return false unless super(row, column, board)
-    return false unless column.between?(@column - 1, @column + 1)
 
-    move = board[row][column]
+    return possible_moves(board).include?([row, column])
+  end
+
+  def possible_moves(board)
+    possible_moves = []
+
     direction = @color == Color::WHITE ? 1 : -1
+    
+    diagonal_one = board[@row + direction][@column - 1]
+    diagonal_two = board[@row + direction][@column + 1]
+    forward_one = board[@row + direction][@column]
+    forward_two = board[@row + direction + direction][@column]
 
-    return false unless row == @row + direction || row == @row + direction + direction
+    possible_moves << [@row + direction, @column - 1] unless diagonal_one.nil? || diagonal_one.color == @color
+    possible_moves << [@row + direction, @column + 1] unless diagonal_two.nil? || diagonal_two.color == @color
+    possible_moves << [@row + direction, @column] if forward_one.nil?
+    possible_moves << [@row + direction + direction, @column] if forward_one.nil? && forward_two.nil?
 
-    if move.nil? && @column == column
-      return true if row == @row + direction
-      return true if row == @row + direction + direction && @never_moved && board[@row + direction][@column].nil?
-    elsif !move.nil? && move.color != @color
-      return true if (column == @column - 1 || column == @column + 1)
-    end
-
-    return false
+    return possible_moves
   end
 
   def update_position(row, column)

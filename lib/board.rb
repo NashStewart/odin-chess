@@ -1,13 +1,21 @@
 # frozen_string_literal: true
 
 require_relative 'color'
+require_relative 'piece/pawn'
+require_relative 'piece/rook'
+require_relative 'piece/knight'
+require_relative 'piece/bishop'
+require_relative 'piece/queen'
+require_relative 'piece/king'
 
 class Board
-  attr_reader :positions
+  attr_reader :positions, :white_king, :black_king
 
   include Color
 
   def initialize(positions = nil)
+    @white_king = nil
+    @black_king = nil
     positions.nil? ? set_board() : @positions = positions
   end
 
@@ -69,7 +77,9 @@ class Board
   end
 
   def add_kings
-    @positions[0][4] = King.new(0, 4, Color::WHITE)
-    @positions[7][4] = King.new(7, 4, Color::BLACK)
+    @white_king = King.new(0, 4, Color::WHITE)
+    @black_king = King.new(7, 4, Color::BLACK)
+    @positions[0][4] = @white_king
+    @positions[7][4] = @black_king
   end
 end
