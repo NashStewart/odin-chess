@@ -33,11 +33,14 @@ class King < Piece
     possible_moves.each_with_index do |move, index|
       row = move.first
       column = move.last
-      piece = board[row][column]
 
-      unless !out_of_bounds?(row, column, board) && (piece.nil? || piece.color != @color)
+      if out_of_bounds?(row, column, board)
         possible_moves.delete_at(index)
+        next
       end
+
+      piece = board[row][column]
+      possible_moves.delete_at(index) unless piece.nil? || piece.color != @color
     end
 
     return possible_moves

@@ -13,9 +13,9 @@ class Board
 
   include Color
 
-  def initialize(positions = nil)
-    @white_king = nil
-    @black_king = nil
+  def initialize(positions = nil, white_king = nil, black_king = nil)
+    @white_king = white_king
+    @black_king = black_king
     positions.nil? ? set_board() : @positions = positions
   end
 

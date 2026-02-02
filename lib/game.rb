@@ -54,7 +54,6 @@ class Game
       return false
     end
 
-
     return true
   end
 
@@ -62,7 +61,7 @@ class Game
     @board.positions.each do |row|
       row.each do |piece|
         next if piece.nil? || piece.color == king.color
-        
+
         return true if piece.can_move?(king.row, king.column, @board.positions)
       end
     end
@@ -70,7 +69,37 @@ class Game
     return false
   end
 
+  def checkmate?(king)
+    @board.positions.each do |row|
+      row.each do |piece|
+        next if piece.nil? || piece.color != king.color
+
+        piece.possible_moves(@board.positions).each do |move|
+          return false if move_breaks_check?(king, piece, move.first, move.last)
+        end
+      end
+    end
+
+    return check?(king)
+  end
+
   private
+
+  def move_breaks_check?(king, piece, row, column)
+    breaks_check = false
+    original_row = piece.row
+    original_column = piece.column
+
+    return false unless @board.move_piece(piece, row, column)
+    piece.update_position(row, column)
+
+    breaks_check = !check?(king)
+
+    @board.move_piece(piece, original_row, original_column)
+    piece.update_position(original_row, original_column)
+
+    return breaks_check
+  end
 
   def get_player_move
     player_move = []
